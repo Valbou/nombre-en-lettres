@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 class SommeVersLettres:
-    """Converti une somme (float) en un lettres (utilisé notamment pour les chèques et les bulletins de soutien)"""
+    """Converti une somme (float) en lettres (utilisé notamment pour les chèques et les bulletins de soutien)"""
     nombre = 0
     dico = {
         '00': '',
