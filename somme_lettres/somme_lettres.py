@@ -50,9 +50,9 @@ class SommeVersLettres:
     nombre = 0
 
     def conversion(self, nombre: float, monnaie: str = "euro"):
-        self.nombre = nombre
         self.monnaie = monnaie
-        self.nombre = round(self.nombre, 2)
+        nombre = round(nombre, 2)
+        self.nombre = nombre
 
         mantisse, liste_nombre = self._preparation(nombre)
         liste_noms = self._traitement_segment(mantisse, liste_nombre)

@@ -14,7 +14,7 @@ class TestSommeVersLettres(unittest.TestCase):
             # (0.01, "un centime"),
             (8.0, "huit euro"),
             (12.59, "douze euro et cinquante-neuf centimes"),
-            (100.05, "cent euro et cinq centimes"),
+            (100.052, "cent euro et cinq centimes"),  # Mantisse arrondie
             (192.75, "cent-quatre-vingt-douze euro et soixante-quinze centimes"),
             (1000.00, "mille  euro"),  # FIXME: double espace non désiré
             (
@@ -57,3 +57,9 @@ class TestSommeVersLettres(unittest.TestCase):
                 "quatre-vingt-dix-huit",
             ],
         )
+
+    def test_preparation(self):
+        nombre = 123.87
+        mantisse, liste_nombres = self.svl._preparation(nombre)
+        self.assertEqual(mantisse, "87")
+        self.assertEqual(liste_nombres, ["123"])
