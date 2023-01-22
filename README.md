@@ -1,4 +1,4 @@
-# Nombre monétaires en toutes lettres
+# Nombre monétaire en toutes lettres
 Converti une somme fournie en euro, en lettres en français.
 
 Permet entre autre, de compléter un chèque avec la somme en toutes lettres.
