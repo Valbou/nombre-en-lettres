@@ -9,7 +9,7 @@ class TestSommeVersLettres(unittest.TestCase):
         self.svl = SommeVersLettres()
 
     def test_convertions_sommes_lettres(self):
-        
+
         valeurs = [
             # (0.01, "un centime"),
             (8.0, "huit euro"),
@@ -42,3 +42,18 @@ class TestSommeVersLettres(unittest.TestCase):
     def test_segmentation_en_trois_avec_partie_reduite(self):
         result: list = self.svl._segmentation("98123456")
         self.assertEqual(result, ["456", "123", "098"])
+
+    def test_traitement_segment(self):
+        liste_nombre = ["456", "009", "123", "098"]
+        mantisse = "12"
+        result = self.svl._traitement_segment(liste_nombre, mantisse)
+        self.assertEqual(
+            result,
+            [
+                "douze",
+                "quatre-cent-cinquante-six",
+                "neuf",
+                "cent-vingt-trois",
+                "quatre-vingt-dix-huit",
+            ],
+        )
