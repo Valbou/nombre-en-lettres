@@ -46,7 +46,7 @@ class TestSommeVersLettres(unittest.TestCase):
     def test_traitement_segment(self):
         liste_nombre = ["456", "009", "123", "098"]
         mantisse = "12"
-        result = self.svl._traitement_segment(liste_nombre, mantisse)
+        result = self.svl._traitement_segment(mantisse, liste_nombre)
         self.assertEqual(
             result,
             [

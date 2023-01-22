@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List
+from typing import List, Tuple
 
 
 _DICO = {
@@ -53,7 +53,10 @@ class SommeVersLettres:
         self.nombre = nombre
         self.monnaie = monnaie
         self.nombre = round(self.nombre, 2)
-        return self._demembrement().strip()
+
+        mantisse, liste_nombre = self._preparation(nombre)
+        liste_noms = self._traitement_segment(mantisse, liste_nombre)
+        return self._nom_puissances(liste_noms).strip()
 
     def _segmentation(self, entiere: str) -> List[str]:
         """Découpe un nombre en sous-nombres de 3 chiffres"""
@@ -73,7 +76,7 @@ class SommeVersLettres:
 
         return liste_nombre
 
-    def _traitement_segment(self, liste_nombre, mantisse):
+    def _traitement_segment(self, mantisse: str, liste_nombre: List[str]):
         """Converti chaque sous-nombre individuellement en lettres"""
         liste_noms = [self._nom_dizaine(mantisse, is_mantisse=True)]
         for i in liste_nombre:
@@ -87,16 +90,15 @@ class SommeVersLettres:
                 liste_noms.append(dizaine)
         return liste_noms
 
-    def _demembrement(self):
-        """Démembre le nombre en sous-nombres à 3 chiffres"""
-        n_str = str(self.nombre)
+    def _preparation(self, nombre: float) -> Tuple[str, List[str]]:
+        """Démembre la mantisse et le nombre en sous-nombres"""
+        n_str = str(nombre)
         entiere, mantisse = n_str.split(".", 1)
-
         # Evite que : 0.1 ne devienne 1 centime au lieu de 10 centimes
         mantisse = f"{mantisse:0<2}"
         liste_nombre = self._segmentation(entiere)
-        liste_noms = self._traitement_segment(liste_nombre, mantisse)
-        return self._nom_puissances(liste_noms)
+
+        return mantisse, liste_nombre 
 
     def _nom_dizaine(self, nombre: str, is_mantisse: bool = False):
         """Génère la dizaine et l'unité d'un nombre à 3 chiffres"""
@@ -152,6 +154,4 @@ class SommeVersLettres:
                 elif mot and mot in "un":
                     print("cas 2 :", mot)
                     final = liste[i % 5] + " " + final
-                else:
-                    pass
         return final
