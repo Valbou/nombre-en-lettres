@@ -57,14 +57,18 @@ class SommeVersLettres:
         """Découpe un nombre en sous-nombre de 3 chiffres"""
         liste_nombre = []
         seg_num = ""
+
+        # Création des blocs de 3 chiffres
         for i in entiere[::-1]:
             seg_num += i
-            # Création des blocs de 3 chiffres
             if len(seg_num) == 3:
                 liste_nombre.append("".join(seg_num[::-1]))
                 seg_num = ""
-        if len(seg_num):  # Récupération du reste (inférieur à 3 chiffres)
+
+        # Récupération du reste (inférieur à 3 chiffres)
+        if len(seg_num):
             liste_nombre.append("{:0>3}".format("".join(seg_num[::-1])))
+
         return liste_nombre
 
     def _traitement_segment(self, liste_nombre, mantisse):
