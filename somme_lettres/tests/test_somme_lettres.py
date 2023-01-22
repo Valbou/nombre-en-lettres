@@ -4,8 +4,12 @@ from somme_lettres import SommeVersLettres
 
 
 class TestSommeVersLettres(unittest.TestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        self.svl = SommeVersLettres()
+
     def test_convertions_sommes_lettres(self):
-        svl = SommeVersLettres()
+        
         valeurs = [
             # (0.01, "un centime"),
             (8.0, "huit euro"),
@@ -25,4 +29,16 @@ class TestSommeVersLettres(unittest.TestCase):
 
         for somme, lettres in valeurs:
             with self.subTest(somme):
-                self.assertEqual(svl.conversion(somme), lettres)
+                self.assertEqual(self.svl.conversion(somme), lettres)
+
+    def test_segmentation_petit_nombre(self):
+        result: list = self.svl._segmentation("1")
+        self.assertEqual(result, ["001"])
+
+    def test_segmentation_en_deux(self):
+        result: list = self.svl._segmentation("123456")
+        self.assertEqual(result, ["456", "123"])
+
+    def test_segmentation_en_trois_avec_partie_reduite(self):
+        result: list = self.svl._segmentation("98123456")
+        self.assertEqual(result, ["456", "123", "098"])
