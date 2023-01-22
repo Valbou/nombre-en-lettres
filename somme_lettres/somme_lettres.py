@@ -2,11 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-class SommeVersLettres:
-    """Converti une somme (float) en lettres (utilisé notamment pour les chèques et les bulletins de soutien)"""
-
-    nombre = 0
-    dico = {
+_DICO = {
         "00": "",
         "0": "zéro",
         "1": "un",
@@ -44,6 +40,12 @@ class SommeVersLettres:
         "60": "soixante",
         "80": "quatre-vingt",
     }
+
+
+class SommeVersLettres:
+    """Converti une somme (float) en lettres (utilisé notamment pour les chèques et les bulletins de soutien)"""
+
+    nombre = 0
 
     def conversion(self, nombre: float, monnaie: str = "euro"):
         self.nombre = nombre
@@ -100,20 +102,20 @@ class SommeVersLettres:
             nombre = "{:0>3}".format(nombre)[-2:]
 
         # Traitement des dizaines
-        if nombre in self.dico:
-            return self.dico[nombre]
+        if nombre in _DICO:
+            return _DICO[nombre]
         elif int(nombre) > 80:
-            return self.dico["80"] + "-" + self.dico[str(int(nombre) - 80)]
+            return _DICO["80"] + "-" + _DICO[str(int(nombre) - 80)]
         elif int(nombre) > 60:
             if nombre == "61" or nombre == "71":
-                return self.dico["60"] + "-et-" + self.dico[str(int(nombre) - 60)]
+                return _DICO["60"] + "-et-" + _DICO[str(int(nombre) - 60)]
             else:
-                return self.dico["60"] + "-" + self.dico[str(int(nombre) - 60)]
+                return _DICO["60"] + "-" + _DICO[str(int(nombre) - 60)]
         elif int(nombre) > 20:
             diz = str(nombre)[:1] + "0"
             if int(nombre) - int(diz) == 1:
-                return self.dico[diz] + "-et-" + self.dico[str(int(nombre) - int(diz))]
-            return self.dico[diz] + "-" + self.dico[str(int(nombre) - int(diz))]
+                return _DICO[diz] + "-et-" + _DICO[str(int(nombre) - int(diz))]
+            return _DICO[diz] + "-" + _DICO[str(int(nombre) - int(diz))]
 
         # Cas particulier (non géré)
         return ""
@@ -126,7 +128,7 @@ class SommeVersLettres:
         elif nombre == "1":
             return "cent"
         else:
-            return self.dico[nombre] + "-cent"
+            return _DICO[nombre] + "-cent"
 
     def _nom_puissances(self, liste_noms: list):
         """Génère les noms des puissances de 3 (milliers, millions etc...)"""
