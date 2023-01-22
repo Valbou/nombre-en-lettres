@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+from typing import List
+
 
 _DICO = {
         "00": "",
@@ -53,8 +55,8 @@ class SommeVersLettres:
         self.nombre = round(self.nombre, 2)
         return self._demembrement().strip()
 
-    def _segmentation(self, entiere: str) -> list:
-        """Découpe un nombre en sous-nombre de 3 chiffres"""
+    def _segmentation(self, entiere: str) -> List[str]:
+        """Découpe un nombre en sous-nombres de 3 chiffres"""
         liste_nombre = []
         seg_num = ""
 
