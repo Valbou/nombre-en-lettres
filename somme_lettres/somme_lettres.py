@@ -155,16 +155,17 @@ class SommeVersLettres:
         if len(liste_mots) == 1 or (len(liste_mots) == 2 and not liste_mots[1]):
             return f"{liste_mots[0]} {liste[0]}{self._pluriel(liste_mots[0])}"
 
-        final = ""
+        mots = []
         for i, mot in enumerate(liste_mots):
             if i % 5 == 0 and mot:  # Centimes
-                final = f"et {mot} {liste[i % 5]}{self._pluriel(mot)}"
+                mots.append(f"et {mot} {liste[i % 5]}{self._pluriel(mot)}")
 
             elif i % 5 in [1, 3, 4]:  # Sauf milliers
                 sep = "-" if i % 5 == 3 else " "
-                final = f"{mot}{sep}{liste[i % 5]}{self._pluriel(mot)} {final}"
+                mots.append(f"{mot}{sep}{liste[i % 5]}{self._pluriel(mot)}")
 
             elif i % 5 == 2:  # Milliers
                 num = f"{mot}-" if mot != "un" else ""
-                final = f"{num}{liste[i % 5]} {final}"
-        return final
+                mots.append(f"{num}{liste[i % 5]}")
+
+        return " ".join(mots[::-1])
