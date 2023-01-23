@@ -3,7 +3,6 @@
 
 from typing import List, Tuple
 
-
 _DICO = {
     "00": "",
     "0": "zéro",
@@ -100,7 +99,9 @@ class SommeVersLettres:
 
         return mantisse, liste_nombre
 
-    def _recadrage(self, nombre: str, is_centaine: bool = False, is_mantisse: bool = False) -> str:
+    def _recadrage(
+        self, nombre: str, is_centaine: bool = False, is_mantisse: bool = False
+    ) -> str:
         """Ajuste le nombre sur la portion à nommer"""
         if is_centaine:
             return f"{nombre:0>3}"[:1]
