@@ -99,3 +99,43 @@ class TestSommeVersLettres(unittest.TestCase):
     def test_recadrage_centaine_long(self):
         result = self.svl._recadrage("20", is_centaine=True)
         self.assertEqual(result, "0")
+
+    def test_nom_dizaine_dans_dico(self):
+        result = self.svl._nom_dizaine("16")
+        self.assertEqual(result, "seize")
+
+    def test_nom_dizaine_sup_80(self):
+        result = self.svl._nom_dizaine("89")
+        self.assertEqual(result, "quatre-vingt-neuf")
+
+    def test_nom_dizaine_sup_60(self):
+        result = self.svl._nom_dizaine("64")
+        self.assertEqual(result, "soixante-quatre")
+
+    def test_nom_dizaine_sup_60_et_1(self):
+        result = self.svl._nom_dizaine("61")
+        self.assertEqual(result, "soixante-et-un")
+
+    def test_nom_dizaine_sup_60_et_11(self):
+        result = self.svl._nom_dizaine("71")
+        self.assertEqual(result, "soixante-et-onze")
+
+    def test_nom_dizaine_sup_20(self):
+        result = self.svl._nom_dizaine("25")
+        self.assertEqual(result, "vingt-cinq")
+
+    def test_nom_dizaine_sup_20_et_1(self):
+        result = self.svl._nom_dizaine("41")
+        self.assertEqual(result, "quarante-et-un")
+
+    def test_nom_centaine(self):
+        result = self.svl._nom_centaine("410")
+        self.assertEqual(result, "quatre-cent")
+
+    def test_nom_centaine_special(self):
+        result = self.svl._nom_centaine("124")
+        self.assertEqual(result, "cent")
+
+    def test_nom_centaine_absente(self):
+        result = self.svl._nom_centaine("069")
+        self.assertEqual(result, "")
