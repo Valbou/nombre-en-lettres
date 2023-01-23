@@ -49,13 +49,13 @@ class SommeVersLettres:
     nombre = 0
 
     def conversion(self, nombre: float, monnaie: str = "euro"):
-        self.monnaie = monnaie
+        assert isinstance(nombre, float)
         nombre = round(nombre, 2)
         self.nombre = nombre
 
         mantisse, liste_nombre = self._preparation(nombre)
         liste_noms = self._traitement_segment(mantisse, liste_nombre)
-        return self._nom_puissances(liste_noms).strip()
+        return self._nom_puissances(liste_noms, monnaie).strip()
 
     def _segmentation(self, entiere: str) -> List[str]:
         """Découpe un nombre en sous-nombres de 3 chiffres"""
@@ -144,15 +144,23 @@ class SommeVersLettres:
         else:
             return _DICO[nombre] + "-cent"
 
-    def _nom_puissances(self, liste_noms: list) -> str:
+    def _pluriel(self, nom: str) -> str:
+        return "" if nom == "un" else "s"
+
+    def _nom_puissances(self, liste_noms: list, monnaie: str = "euro") -> str:
         """Génère les noms des puissances de 3 (milliers, millions etc...)"""
-        liste = ["centimes", self.monnaie, "mille", "millions", "milliards"]
+        liste = ["centime", monnaie, "mille", "million", "milliard"]
+
+        # Gère les valeur inférieur à 1.0
+        if len(liste_noms) == 1 or (len(liste_noms) == 2 and not liste_noms[1]):
+            return f"{liste_noms[0]} {liste[0]}{self._pluriel(liste_noms[0])}"
+
         final = ""
         for i, mot in enumerate(liste_noms):
             if i % 5 == 0 and mot:
-                final = "et " + mot + " " + liste[i % 5]
+                final = "et " + mot + " " + liste[i % 5] + self._pluriel(mot)
             elif i % 5 in [1, 3, 4]:
-                final = mot + ("-" if i % 5 == 3 else " ") + liste[i % 5] + " " + final
+                final = mot + ("-" if i % 5 == 3 else " ") + liste[i % 5] + self._pluriel(mot) + " " + final
             elif i % 5 == 2:
                 if mot and mot not in "un":
                     print("cas 1 :", mot)

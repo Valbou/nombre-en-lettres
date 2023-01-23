@@ -3,7 +3,7 @@ Converti une somme fournie en une devise (ex: euro, francs), en toutes lettres e
 
 ![License LGPLv3](https://img.shields.io/badge/license-LGPLv3-blue "License LGPLv3")
 ![Python v3.7](https://img.shields.io/badge/python-v3.7-blue "Python v3.7")
-![Tests 25 passed](https://img.shields.io/badge/tests-25%20passed-green "Tests 25 passed")
+![Tests 28 passed](https://img.shields.io/badge/tests-28%20passed-green "Tests 28 passed")
 ![Coverage 99%](https://img.shields.io/badge/coverage-99%25-green "Coverage 99%")
 ![Code quality A](https://img.shields.io/badge/code%20quality-A-green "Code quality A")
 

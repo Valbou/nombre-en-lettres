@@ -11,19 +11,20 @@ class TestSommeVersLettres(unittest.TestCase):
     def test_convertions_sommes_lettres(self):
 
         valeurs = [
-            # (0.01, "un centime"),
-            (8.0, "huit euro"),
-            (12.59, "douze euro et cinquante-neuf centimes"),
-            (100.052, "cent euro et cinq centimes"),  # Mantisse arrondie
-            (192.75, "cent-quatre-vingt-douze euro et soixante-quinze centimes"),
-            (1000.00, "mille  euro"),  # FIXME: double espace non désiré
+            (0.01, "un centime"),
+            (5., "cinq euros"),
+            (8.0, "huit euros"),
+            (12.59, "douze euros et cinquante-neuf centimes"),
+            (100.052, "cent euros et cinq centimes"),  # Mantisse arrondie
+            (192.75, "cent-quatre-vingt-douze euros et soixante-quinze centimes"),
+            (1000.00, "mille  euros"),  # FIXME: double espace non désiré
             (
                 8_753.9,
-                "huit-mille sept-cent-cinquante-trois euro et quatre-vingt-dix centimes",
+                "huit-mille sept-cent-cinquante-trois euros et quatre-vingt-dix centimes",
             ),  # FIXME: tiret après les milliers attendu
             (
                 72_654.02,
-                "soixante-douze-mille six-cent-cinquante-quatre euro et deux centimes",
+                "soixante-douze-mille six-cent-cinquante-quatre euros et deux centimes",
             ),  # FIXME: tiret après les milliers attendu
         ]
 
@@ -139,3 +140,15 @@ class TestSommeVersLettres(unittest.TestCase):
     def test_nom_centaine_absente(self):
         result = self.svl._nom_centaine("069")
         self.assertEqual(result, "")
+
+    def test_nom_puissance_centimes_uniquement(self):
+        result = self.svl._nom_puissances(['douze'])
+        self.assertEqual(result, "douze centimes")
+
+    def test_singulier(self):
+        result = self.svl._pluriel("un")
+        self.assertEqual(result, "")
+
+    def test_pluriel(self):
+        result = self.svl._pluriel("autre")
+        self.assertEqual(result, "s")
