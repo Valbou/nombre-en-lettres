@@ -109,7 +109,7 @@ class SommeVersLettres:
                 return f"{nombre:0<2}"[:2]
         return f"{nombre:0>3}"[-2:]
 
-    def _nom_dizaine(self, nombre: str, is_mantisse: bool = False):
+    def _nom_dizaine(self, nombre: str, is_mantisse: bool = False) -> str:
         """Génère la dizaine et l'unité d'un nombre à 3 chiffres"""
         nombre = self._recadrage(nombre, is_mantisse=is_mantisse)
 
@@ -132,7 +132,7 @@ class SommeVersLettres:
         # Cas particulier (non géré)
         return ""
 
-    def _nom_centaine(self, nombre: str):
+    def _nom_centaine(self, nombre: str) -> str:
         """Génère la centaine d'un nombre à 3 chiffres"""
         nombre = self._recadrage(nombre, is_centaine=True)
 
@@ -143,7 +143,7 @@ class SommeVersLettres:
         else:
             return _DICO[nombre] + "-cent"
 
-    def _nom_puissances(self, liste_noms: list):
+    def _nom_puissances(self, liste_noms: list) -> str:
         """Génère les noms des puissances de 3 (milliers, millions etc...)"""
         liste = ["centimes", self.monnaie, "mille", "millions", "milliards"]
         final = ""
