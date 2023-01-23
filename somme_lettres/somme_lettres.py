@@ -54,8 +54,8 @@ class SommeVersLettres:
         self.nombre = nombre
 
         mantisse, liste_nombre = self._preparation(nombre)
-        liste_noms = self._traitement_segment(mantisse, liste_nombre)
-        return self._nom_puissances(liste_noms, monnaie).strip()
+        liste_mots = self._traitement_segment(mantisse, liste_nombre)
+        return self._nom_puissances(liste_mots, monnaie).strip()
 
     def _segmentation(self, entiere: str) -> List[str]:
         """Découpe un nombre en sous-nombres de 3 chiffres"""
@@ -77,17 +77,17 @@ class SommeVersLettres:
 
     def _traitement_segment(self, mantisse: str, liste_nombre: List[str]):
         """Converti chaque sous-nombre individuellement en lettres"""
-        liste_noms = [self._nom_dizaine(mantisse, is_mantisse=True)]
+        liste_mots = [self._nom_dizaine(mantisse, is_mantisse=True)]
         for i in liste_nombre:
             centaine = self._nom_centaine(i)
             dizaine = self._nom_dizaine(i)
             if centaine and dizaine:
-                liste_noms.append(centaine + "-" + dizaine)
+                liste_mots.append(centaine + "-" + dizaine)
             elif centaine:
-                liste_noms.append(centaine)
+                liste_mots.append(centaine)
             else:
-                liste_noms.append(dizaine)
-        return liste_noms
+                liste_mots.append(dizaine)
+        return liste_mots
 
     def _preparation(self, nombre: float) -> Tuple[str, List[str]]:
         """Démembre la mantisse et le nombre en sous-nombres"""
@@ -147,25 +147,24 @@ class SommeVersLettres:
     def _pluriel(self, nom: str) -> str:
         return "" if nom == "un" else "s"
 
-    def _nom_puissances(self, liste_noms: list, monnaie: str = "euro") -> str:
+    def _nom_puissances(self, liste_mots: list, monnaie: str = "euro") -> str:
         """Génère les noms des puissances de 3 (milliers, millions etc...)"""
         liste = ["centime", monnaie, "mille", "million", "milliard"]
 
         # Gère les valeur inférieur à 1.0
-        if len(liste_noms) == 1 or (len(liste_noms) == 2 and not liste_noms[1]):
-            return f"{liste_noms[0]} {liste[0]}{self._pluriel(liste_noms[0])}"
+        if len(liste_mots) == 1 or (len(liste_mots) == 2 and not liste_mots[1]):
+            return f"{liste_mots[0]} {liste[0]}{self._pluriel(liste_mots[0])}"
 
         final = ""
-        for i, mot in enumerate(liste_noms):
-            if i % 5 == 0 and mot:
-                final = "et " + mot + " " + liste[i % 5] + self._pluriel(mot)
-            elif i % 5 in [1, 3, 4]:
-                final = mot + ("-" if i % 5 == 3 else " ") + liste[i % 5] + self._pluriel(mot) + " " + final
-            elif i % 5 == 2:
-                if mot and mot not in "un":
-                    print("cas 1 :", mot)
-                    final = mot + "-" + liste[i % 5] + " " + final
-                elif mot and mot in "un":
-                    print("cas 2 :", mot)
-                    final = liste[i % 5] + " " + final
+        for i, mot in enumerate(liste_mots):
+            if i % 5 == 0 and mot:  # Centimes
+                final = f"et {mot} {liste[i % 5]}{self._pluriel(mot)}"
+
+            elif i % 5 in [1, 3, 4]:  # Sauf milliers
+                sep = "-" if i % 5 == 3 else " "
+                final = f"{mot}{sep}{liste[i % 5]}{self._pluriel(mot)} {final}"
+
+            elif i % 5 == 2:  # Milliers
+                num = f"{mot}-" if mot != "un" else ""
+                final = f"{num}{liste[i % 5]} {final}"
         return final
