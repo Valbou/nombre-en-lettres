@@ -63,3 +63,39 @@ class TestSommeVersLettres(unittest.TestCase):
         mantisse, liste_nombres = self.svl._preparation(nombre)
         self.assertEqual(mantisse, "87")
         self.assertEqual(liste_nombres, ["123"])
+
+    def test_recadrage_mantisse_base(self):
+        result = self.svl._recadrage("82", is_mantisse=True)
+        self.assertEqual(result, "82")
+
+    def test_recadrage_mantisse_court(self):
+        result = self.svl._recadrage("2", is_mantisse=True)
+        self.assertEqual(result, "20")
+
+    def test_recadrage_mantisse_long(self):
+        result = self.svl._recadrage("675", is_mantisse=True)
+        self.assertEqual(result, "67")
+
+    def test_recadrage_dizaine_base(self):
+        result = self.svl._recadrage("17")
+        self.assertEqual(result, "17")
+
+    def test_recadrage_dizaine_court(self):
+        result = self.svl._recadrage("7")
+        self.assertEqual(result, "07")
+
+    def test_recadrage_dizaine_long(self):
+        result = self.svl._recadrage("167")
+        self.assertEqual(result, "67")
+
+    def test_recadrage_centaine_base(self):
+        result = self.svl._recadrage("453", is_centaine=True)
+        self.assertEqual(result, "4")
+
+    def test_recadrage_centaine_court(self):
+        result = self.svl._recadrage("7", is_centaine=True)
+        self.assertEqual(result, "0")
+
+    def test_recadrage_centaine_long(self):
+        result = self.svl._recadrage("20", is_centaine=True)
+        self.assertEqual(result, "0")

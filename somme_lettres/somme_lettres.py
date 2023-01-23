@@ -98,16 +98,20 @@ class SommeVersLettres:
         mantisse = f"{mantisse:0<2}"
         liste_nombre = self._segmentation(entiere)
 
-        return mantisse, liste_nombre 
+        return mantisse, liste_nombre
+
+    def _recadrage(self, nombre: str, is_centaine: bool = False, is_mantisse: bool = False) -> str:
+        """Ajuste le nombre sur la portion à nommer"""
+        if is_centaine:
+            return f"{nombre:0>3}"[:1]
+        else:
+            if is_mantisse:
+                return f"{nombre:0<2}"[:2]
+        return f"{nombre:0>3}"[-2:]
 
     def _nom_dizaine(self, nombre: str, is_mantisse: bool = False):
         """Génère la dizaine et l'unité d'un nombre à 3 chiffres"""
-
-        # Recadrage de la partie à traiter selon la partie du nombre
-        if is_mantisse:
-            nombre = "{:0<2}".format(nombre)
-        else:
-            nombre = "{:0>3}".format(nombre)[-2:]
+        nombre = self._recadrage(nombre, is_mantisse=is_mantisse)
 
         # Traitement des dizaines
         if nombre in _DICO:
@@ -130,7 +134,8 @@ class SommeVersLettres:
 
     def _nom_centaine(self, nombre: str):
         """Génère la centaine d'un nombre à 3 chiffres"""
-        nombre = "{:0>3}".format(nombre)[:1]
+        nombre = self._recadrage(nombre, is_centaine=True)
+
         if nombre == "0":
             return ""
         elif nombre == "1":
