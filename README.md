@@ -10,4 +10,4 @@ Converti une somme fournie en une devise (ex: euro, francs), en toutes lettres e
 Permet entre autre, de compléter automatiquement un chèque avec la somme en chiffres et en toutes lettres.
 Le système colle au plus près de la notation française, toutefois, il reste quelques imprécisions sur la gestion des séparateurs.
 
-Gère des centimes à plusieurs milliards, ce qui devrait couvrir la plupart des usages courants :)
+Gère des sommes de 1 centime à plusieurs centaines de milliers de milliards... Ce qui devrait couvrir la plupart des usages courants :)

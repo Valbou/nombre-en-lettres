@@ -55,7 +55,16 @@ class SommeVersLettres:
 
         mantisse, liste_nombre = self._preparation(nombre)
         liste_mots = self._traitement_segment(mantisse, liste_nombre)
-        return self._nom_puissances(liste_mots, monnaie).strip()
+        return self._nettoyage_tirets(
+            self._nom_puissances(liste_mots, monnaie)
+        )
+
+    def _nettoyage_tirets(self, result: str) -> str:
+        return result \
+            .replace("-euros ", " euros ") \
+            .replace("-euros-", " euros ") \
+            .replace(" euros-", " euros ") \
+            .strip()
 
     def _segmentation(self, entiere: str) -> List[str]:
         """Découpe un nombre en sous-nombres de 3 chiffres"""
@@ -149,23 +158,39 @@ class SommeVersLettres:
 
     def _nom_puissances(self, liste_mots: list, monnaie: str = "euro") -> str:
         """Génère les noms des puissances de 3 (milliers, millions etc...)"""
-        liste = ["centime", monnaie, "mille", "million", "milliard"]
+        liste = ["mille", "million", "milliard"]
+        centimes, unites, *puissances = liste_mots
 
-        # Gère les valeur inférieur à 1.0
-        if len(liste_mots) == 1 or (len(liste_mots) == 2 and not liste_mots[1]):
-            return f"{liste_mots[0]} {liste[0]}{self._pluriel(liste_mots[0])}"
+        # Gère les valeurs inférieur à 1.0
+        if centimes and not unites and not puissances:
+            return f"{centimes} centime{self._pluriel(centimes)}"
 
         mots = []
-        for i, mot in enumerate(liste_mots):
-            if i % 5 == 0 and mot:  # Centimes
-                mots.append(f"et {mot} {liste[i % 5]}{self._pluriel(mot)}")
+        # Gère les centimes
+        if centimes:
+            mots.append(f"et {centimes} centime{self._pluriel(centimes)}")
+        else:
+            mots.append("")
 
-            elif i % 5 in [1, 3, 4]:  # Sauf milliers
-                sep = "-" if i % 5 == 3 else " "
-                mots.append(f"{mot}{sep}{liste[i % 5]}{self._pluriel(mot)}")
+        # Gère les unités
+        if unites:
+            mots.append(f"{unites} {monnaie}{self._pluriel(unites)}")
+        else:
+            mots.append(f"{monnaie}s")
 
-            elif i % 5 == 2:  # Milliers
+        # Gère les puissances
+        for i, mot in enumerate(puissances):
+            if i % 3 == 0 and mot:  # Milliers
                 num = f"{mot}-" if mot != "un" else ""
-                mots.append(f"{num}{liste[i % 5]}")
+                mots.append(f"{num}{liste[i % 3]}")
 
-        return " ".join(mots[::-1])
+            elif i % 3 in [1, 2] and mot:  # Sauf milliers
+                mots.append(f"{mot}-{liste[i % 3]}{self._pluriel(mot)}")
+
+        mots_ordones = mots[::-1]
+        grands_nombres = '-'.join(mots_ordones[:-2])
+        unites_et_centimes = ' '.join(mots_ordones[-2:])
+        if grands_nombres:
+            return f"{grands_nombres}-{unites_et_centimes}"
+        else:
+            return unites_et_centimes

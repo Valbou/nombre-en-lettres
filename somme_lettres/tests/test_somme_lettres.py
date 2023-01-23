@@ -17,15 +17,28 @@ class TestSommeVersLettres(unittest.TestCase):
             (12.59, "douze euros et cinquante-neuf centimes"),
             (100.052, "cent euros et cinq centimes"),  # Mantisse arrondie
             (192.75, "cent-quatre-vingt-douze euros et soixante-quinze centimes"),
-            (1000.00, "mille  euros"),  # FIXME: double espace non désiré
+            (1000.00, "mille euros"),
+            (10_000.00, "dix-mille euros"),
+            (100_005.00, "cent-mille-cinq euros"),
+            (1_000_000.00, "un-million euros"),
+            (1_000_000_100.10, "un-milliard-cent euros et dix centimes"),
+            (9_999_000_000_100.00, "neuf-mille-neuf-cent-quatre-vingt-dix-neuf-milliards-cent euros"),
             (
                 8_753.9,
-                "huit-mille sept-cent-cinquante-trois euros et quatre-vingt-dix centimes",
-            ),  # FIXME: tiret après les milliers attendu
+                "huit-mille-sept-cent-cinquante-trois euros et quatre-vingt-dix centimes",
+            ),
             (
                 72_654.02,
-                "soixante-douze-mille six-cent-cinquante-quatre euros et deux centimes",
-            ),  # FIXME: tiret après les milliers attendu
+                "soixante-douze-mille-six-cent-cinquante-quatre euros et deux centimes",
+            ),
+            (
+                147_258_369.,
+                "cent-quarante-sept-millions-deux-cent-cinquante-huit-mille-trois-cent-soixante-neuf euros"
+            ),
+            (
+                465_789_147_258_369.,
+                "quatre-cent-soixante-cinq-mille-sept-cent-quatre-vingt-neuf-milliards-cent-quarante-sept-millions-deux-cent-cinquante-huit-mille-trois-cent-soixante-neuf euros"
+            ),
         ]
 
         for somme, lettres in valeurs:
@@ -142,7 +155,7 @@ class TestSommeVersLettres(unittest.TestCase):
         self.assertEqual(result, "")
 
     def test_nom_puissance_centimes_uniquement(self):
-        result = self.svl._nom_puissances(['douze'])
+        result = self.svl._nom_puissances(['douze', ''])
         self.assertEqual(result, "douze centimes")
 
     def test_singulier(self):
