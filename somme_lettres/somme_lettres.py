@@ -22,10 +22,7 @@ class SommeVersLettres:
         return self._nom_puissances(liste_mots, monnaie)
 
     def _nettoyage_tirets(self, result: str) -> str:
-        return result \
-            .replace("-euros", " euros ") \
-            .replace("euros-", " euros ") \
-            .strip()
+        return result.replace("-euros", " euros ").replace("euros-", " euros ").strip()
 
     def _segmentation(self, entiere: str) -> List[str]:
         """Découpe un nombre en sous-nombres de 3 chiffres"""
@@ -65,9 +62,11 @@ class SommeVersLettres:
         n_str = f"{nombre:.2f}"
         entiere, mantisse = n_str.split(".", 1)
 
-        maximum = len(_PUISSANCES)*3
+        maximum = len(_PUISSANCES) * 3
         if len(entiere) > maximum:
-            raise ValueError(f"Le nombre a convertir dépasse les capacité de traitement actuelle: 10^{maximum} maximum")
+            raise ValueError(
+                f"Le nombre a convertir dépasse les capacité de traitement actuelle: 10^{maximum} maximum"
+            )
 
         # Evite que : 0.1 ne devienne 1 centime au lieu de 10 centimes
         mantisse = f"{mantisse:0<2}"
@@ -123,7 +122,9 @@ class SommeVersLettres:
     def _pluriel(self, nom: str) -> str:
         return "" if nom == "un" else "s"
 
-    def _gen_centimes(self, centimes: str, unites: str = "", puissances: Optional[List[str]] = None) -> str:
+    def _gen_centimes(
+        self, centimes: str, unites: str = "", puissances: Optional[List[str]] = None
+    ) -> str:
         puissances = puissances or []
 
         if centimes and not unites and not puissances:
@@ -132,7 +133,9 @@ class SommeVersLettres:
             return f"et {centimes} centime{self._pluriel(centimes)}"
         return ""
 
-    def _gen_unites(self, monnaie: str, unites: str = "", puissances: Optional[List[str]] = None) -> str:
+    def _gen_unites(
+        self, monnaie: str, unites: str = "", puissances: Optional[List[str]] = None
+    ) -> str:
         puissances = puissances or []
 
         if unites:
@@ -141,7 +144,9 @@ class SommeVersLettres:
             return f"{monnaie}s"
         return ""
 
-    def _gen_puissances(self, puissances: Optional[List[str]] = None) -> Optional[List[str]]:
+    def _gen_puissances(
+        self, puissances: Optional[List[str]] = None
+    ) -> Optional[List[str]]:
         puissances = puissances or []
         mots = []
 
@@ -156,8 +161,8 @@ class SommeVersLettres:
 
     def _jonction(self, mots: List[str]) -> str:
         mots_ordre = mots[::-1]
-        grands_nombres = '-'.join(mots_ordre[:-2])
-        unites_et_centimes = ' '.join(mots_ordre[-2:])
+        grands_nombres = "-".join(mots_ordre[:-2])
+        unites_et_centimes = " ".join(mots_ordre[-2:])
 
         if grands_nombres:
             return f"{grands_nombres}-{unites_et_centimes}"
@@ -174,6 +179,4 @@ class SommeVersLettres:
         ]
         mots.extend(self._gen_puissances(puissances))
 
-        return self._nettoyage_tirets(
-            self._jonction(mots)
-        )
+        return self._nettoyage_tirets(self._jonction(mots))

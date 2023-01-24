@@ -1,4 +1,3 @@
-
 _DICO = {
     "00": "",
     "0": "zéro",
@@ -65,5 +64,5 @@ _PUISSANCES = [
     "duodécillion",
     "duodécilliard",
     "trédécillion",
-    "trédécilliard"
+    "trédécilliard",
 ]

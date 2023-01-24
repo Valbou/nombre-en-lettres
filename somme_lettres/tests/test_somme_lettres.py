@@ -12,7 +12,7 @@ class TestSommeVersLettres(unittest.TestCase):
 
         valeurs = [
             (0.01, "un centime"),
-            (5., "cinq euros"),
+            (5.0, "cinq euros"),
             (8.0, "huit euros"),
             (12.59, "douze euros et cinquante-neuf centimes"),
             (100.052, "cent euros et cinq centimes"),  # Mantisse arrondie
@@ -22,7 +22,10 @@ class TestSommeVersLettres(unittest.TestCase):
             (100_005.00, "cent-mille-cinq euros"),
             (1_000_000.00, "un-million euros"),
             (1_000_000_100.10, "un-milliard-cent euros et dix centimes"),
-            (9_999_000_000_100.00, "neuf-billions-neuf-cent-quatre-vingt-dix-neuf-milliards-cent euros"),
+            (
+                9_999_000_000_100.00,
+                "neuf-billions-neuf-cent-quatre-vingt-dix-neuf-milliards-cent euros",
+            ),
             (
                 8_753.9,
                 "huit-mille-sept-cent-cinquante-trois euros et quatre-vingt-dix centimes",
@@ -32,12 +35,12 @@ class TestSommeVersLettres(unittest.TestCase):
                 "soixante-douze-mille-six-cent-cinquante-quatre euros et deux centimes",
             ),
             (
-                147_258_369.,
-                "cent-quarante-sept-millions-deux-cent-cinquante-huit-mille-trois-cent-soixante-neuf euros"
+                147_258_369.0,
+                "cent-quarante-sept-millions-deux-cent-cinquante-huit-mille-trois-cent-soixante-neuf euros",
             ),
             (
-                465_789_147_258_369.,
-                "quatre-cent-soixante-cinq-billions-sept-cent-quatre-vingt-neuf-milliards-cent-quarante-sept-millions-deux-cent-cinquante-huit-mille-trois-cent-soixante-neuf euros"
+                465_789_147_258_369.0,
+                "quatre-cent-soixante-cinq-billions-sept-cent-quatre-vingt-neuf-milliards-cent-quarante-sept-millions-deux-cent-cinquante-huit-mille-trois-cent-soixante-neuf euros",
             ),
         ]
 
@@ -48,7 +51,9 @@ class TestSommeVersLettres(unittest.TestCase):
     def test_type_error_conversion(self):
         with self.assertRaises(TypeError) as e:
             self.svl.conversion(456)
-            self.assertEqual(e.exception, "Le nombre à convertir doit être de type float")
+            self.assertEqual(
+                e.exception, "Le nombre à convertir doit être de type float"
+            )
 
     def test_segmentation_petit_nombre(self):
         result: list = self.svl._segmentation("1")
@@ -87,7 +92,10 @@ class TestSommeVersLettres(unittest.TestCase):
         nombre = 12345678901234567890123456789012345678901234567890123456789012345678901234567890.0
         with self.assertRaises(ValueError) as e:
             self.svl._preparation(nombre)
-            self.assertEqual(e.exception, "Le nombre a convertir dépasse les capacité de traitement actuelle: 10^78 maximum")
+            self.assertEqual(
+                e.exception,
+                "Le nombre a convertir dépasse les capacité de traitement actuelle: 10^78 maximum",
+            )
 
     def test_recadrage_mantisse_base(self):
         result = self.svl._recadrage("82", is_mantisse=True)
@@ -166,7 +174,7 @@ class TestSommeVersLettres(unittest.TestCase):
         self.assertEqual(result, "")
 
     def test_nom_puissance_centimes_uniquement(self):
-        result = self.svl._nom_puissances(['douze', ''])
+        result = self.svl._nom_puissances(["douze", ""])
         self.assertEqual(result.strip(), "douze centimes")
 
     def test_singulier(self):
@@ -242,51 +250,51 @@ class TestSommeVersLettres(unittest.TestCase):
         self.assertEqual(result, [])
 
     def test_gen_puissances_3_un(self):
-        puissances = ['un']
+        puissances = ["un"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['mille'])
+        self.assertEqual(result, ["mille"])
 
     def test_gen_puissances_3(self):
-        puissances = ['onze']
+        puissances = ["onze"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['onze-mille'])
+        self.assertEqual(result, ["onze-mille"])
 
     def test_gen_puissances_6_un(self):
-        puissances = ['', 'un']
+        puissances = ["", "un"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['un-million'])
+        self.assertEqual(result, ["un-million"])
 
     def test_gen_puissances_6(self):
-        puissances = ['', 'onze']
+        puissances = ["", "onze"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['onze-millions'])
+        self.assertEqual(result, ["onze-millions"])
 
     def test_gen_puissances_9_un(self):
-        puissances = ['', '', 'un']
+        puissances = ["", "", "un"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['un-milliard'])
+        self.assertEqual(result, ["un-milliard"])
 
     def test_gen_puissances_9(self):
-        puissances = ['', '', 'onze']
+        puissances = ["", "", "onze"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['onze-milliards'])
+        self.assertEqual(result, ["onze-milliards"])
 
     def test_gen_puissances_12_un(self):
-        puissances = ['', '', '', 'un']
+        puissances = ["", "", "", "un"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['un-billion'])
+        self.assertEqual(result, ["un-billion"])
 
     def test_gen_puissances_12(self):
-        puissances = ['', '', '', 'onze']
+        puissances = ["", "", "", "onze"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['onze-billions'])
+        self.assertEqual(result, ["onze-billions"])
 
     def test_gen_puissances_15_un(self):
-        puissances = ['', '', '', '', 'un']
+        puissances = ["", "", "", "", "un"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['un-billiard'])
+        self.assertEqual(result, ["un-billiard"])
 
     def test_gen_puissances_15(self):
-        puissances = ['', '', '', '', 'onze']
+        puissances = ["", "", "", "", "onze"]
         result = self.svl._gen_puissances(puissances)
-        self.assertEqual(result, ['onze-billiards'])
+        self.assertEqual(result, ["onze-billiards"])
