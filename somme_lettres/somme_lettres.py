@@ -2,45 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from typing import List, Tuple, Optional
-
-_DICO = {
-    "00": "",
-    "0": "zéro",
-    "1": "un",
-    "01": "un",
-    "2": "deux",
-    "02": "deux",
-    "3": "trois",
-    "03": "trois",
-    "4": "quatre",
-    "04": "quatre",
-    "5": "cinq",
-    "05": "cinq",
-    "6": "six",
-    "06": "six",
-    "7": "sept",
-    "07": "sept",
-    "8": "huit",
-    "08": "huit",
-    "9": "neuf",
-    "09": "neuf",
-    "10": "dix",
-    "11": "onze",
-    "12": "douze",
-    "13": "treize",
-    "14": "quatorze",
-    "15": "quinze",
-    "16": "seize",
-    "17": "dix-sept",
-    "18": "dix-huit",
-    "19": "dix-neuf",
-    "20": "vingt",
-    "30": "trente",
-    "40": "quarante",
-    "50": "cinquante",
-    "60": "soixante",
-    "80": "quatre-vingt",
-}
+from .constantes import _DICO, _PUISSANCES
 
 
 class SommeVersLettres:
@@ -49,7 +11,9 @@ class SommeVersLettres:
     nombre = 0
 
     def conversion(self, nombre: float, monnaie: str = "euro"):
-        assert isinstance(nombre, float)
+        if not isinstance(nombre, float):
+            raise TypeError("Le nombre à convertir doit être de type float")
+
         nombre = round(nombre, 2)
         self.nombre = nombre
 
@@ -97,8 +61,14 @@ class SommeVersLettres:
 
     def _preparation(self, nombre: float) -> Tuple[str, List[str]]:
         """Démembre la mantisse et le nombre en sous-nombres"""
-        n_str = str(nombre)
+        # requis pour éviter la notation scientifique
+        n_str = f"{nombre:.2f}"
         entiere, mantisse = n_str.split(".", 1)
+
+        maximum = len(_PUISSANCES)*3
+        if len(entiere) > maximum:
+            raise ValueError(f"Le nombre a convertir dépasse les capacité de traitement actuelle: 10^{maximum} maximum")
+
         # Evite que : 0.1 ne devienne 1 centime au lieu de 10 centimes
         mantisse = f"{mantisse:0<2}"
         liste_nombre = self._segmentation(entiere)
@@ -162,7 +132,7 @@ class SommeVersLettres:
             return f"et {centimes} centime{self._pluriel(centimes)}"
         return ""
 
-    def _gen_unites(self, monnaie: str, unites: str = "", puissances: Optional[List[str]] = None):
+    def _gen_unites(self, monnaie: str, unites: str = "", puissances: Optional[List[str]] = None) -> str:
         puissances = puissances or []
 
         if unites:
@@ -171,18 +141,17 @@ class SommeVersLettres:
             return f"{monnaie}s"
         return ""
 
-    def _gen_puissances(self, puissances: Optional[List[str]] = None):
+    def _gen_puissances(self, puissances: Optional[List[str]] = None) -> Optional[List[str]]:
         puissances = puissances or []
         mots = []
-        liste = ["mille", "million", "milliard"]
 
         for i, mot in enumerate(puissances):
-            if i % 3 == 0 and mot:  # Milliers
+            if i == 0 and mot:  # Milliers
                 num = f"{mot}-" if mot != "un" else ""
-                mots.append(f"{num}{liste[i % 3]}")
+                mots.append(f"{num}{_PUISSANCES[i]}")
+            elif mot:  # Sauf milliers
+                mots.append(f"{mot}-{_PUISSANCES[i]}{self._pluriel(mot)}")
 
-            elif i % 3 in [1, 2] and mot:  # Sauf milliers
-                mots.append(f"{mot}-{liste[i % 3]}{self._pluriel(mot)}")
         return mots
 
     def _jonction(self, mots: List[str]) -> str:
