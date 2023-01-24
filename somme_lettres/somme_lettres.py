@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 _DICO = {
     "00": "",
@@ -55,15 +55,12 @@ class SommeVersLettres:
 
         mantisse, liste_nombre = self._preparation(nombre)
         liste_mots = self._traitement_segment(mantisse, liste_nombre)
-        return self._nettoyage_tirets(
-            self._nom_puissances(liste_mots, monnaie)
-        )
+        return self._nom_puissances(liste_mots, monnaie)
 
     def _nettoyage_tirets(self, result: str) -> str:
         return result \
-            .replace("-euros ", " euros ") \
-            .replace("-euros-", " euros ") \
-            .replace(" euros-", " euros ") \
+            .replace("-euros", " euros ") \
+            .replace("euros-", " euros ") \
             .strip()
 
     def _segmentation(self, entiere: str) -> List[str]:
@@ -156,29 +153,29 @@ class SommeVersLettres:
     def _pluriel(self, nom: str) -> str:
         return "" if nom == "un" else "s"
 
-    def _nom_puissances(self, liste_mots: list, monnaie: str = "euro") -> str:
-        """Génère les noms des puissances de 3 (milliers, millions etc...)"""
-        liste = ["mille", "million", "milliard"]
-        centimes, unites, *puissances = liste_mots
+    def _gen_centimes(self, centimes: str, unites: str = "", puissances: Optional[List[str]] = None) -> str:
+        puissances = puissances or []
 
-        # Gère les valeurs inférieur à 1.0
         if centimes and not unites and not puissances:
             return f"{centimes} centime{self._pluriel(centimes)}"
+        elif centimes:
+            return f"et {centimes} centime{self._pluriel(centimes)}"
+        return ""
 
-        mots = []
-        # Gère les centimes
-        if centimes:
-            mots.append(f"et {centimes} centime{self._pluriel(centimes)}")
-        else:
-            mots.append("")
+    def _gen_unites(self, monnaie: str, unites: str = "", puissances: Optional[List[str]] = None):
+        puissances = puissances or []
 
-        # Gère les unités
         if unites:
-            mots.append(f"{unites} {monnaie}{self._pluriel(unites)}")
-        else:
-            mots.append(f"{monnaie}s")
+            return f"{unites} {monnaie}{self._pluriel(unites)}"
+        elif puissances:
+            return f"{monnaie}s"
+        return ""
 
-        # Gère les puissances
+    def _gen_puissances(self, puissances: Optional[List[str]] = None):
+        puissances = puissances or []
+        mots = []
+        liste = ["mille", "million", "milliard"]
+
         for i, mot in enumerate(puissances):
             if i % 3 == 0 and mot:  # Milliers
                 num = f"{mot}-" if mot != "un" else ""
@@ -186,11 +183,28 @@ class SommeVersLettres:
 
             elif i % 3 in [1, 2] and mot:  # Sauf milliers
                 mots.append(f"{mot}-{liste[i % 3]}{self._pluriel(mot)}")
+        return mots
 
-        mots_ordones = mots[::-1]
-        grands_nombres = '-'.join(mots_ordones[:-2])
-        unites_et_centimes = ' '.join(mots_ordones[-2:])
+    def _jonction(self, mots: List[str]) -> str:
+        mots_ordre = mots[::-1]
+        grands_nombres = '-'.join(mots_ordre[:-2])
+        unites_et_centimes = ' '.join(mots_ordre[-2:])
+
         if grands_nombres:
             return f"{grands_nombres}-{unites_et_centimes}"
         else:
             return unites_et_centimes
+
+    def _nom_puissances(self, liste_mots: list, monnaie: str = "euro") -> str:
+        """Génère les noms des puissances de 3 (milliers, millions etc...)"""
+        centimes, unites, *puissances = liste_mots
+
+        mots = [
+            self._gen_centimes(centimes, unites, puissances),
+            self._gen_unites(monnaie, unites, puissances),
+        ]
+        mots.extend(self._gen_puissances(puissances))
+
+        return self._nettoyage_tirets(
+            self._jonction(mots)
+        )

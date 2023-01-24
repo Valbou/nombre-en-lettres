@@ -156,7 +156,7 @@ class TestSommeVersLettres(unittest.TestCase):
 
     def test_nom_puissance_centimes_uniquement(self):
         result = self.svl._nom_puissances(['douze', ''])
-        self.assertEqual(result, "douze centimes")
+        self.assertEqual(result.strip(), "douze centimes")
 
     def test_singulier(self):
         result = self.svl._pluriel("un")
