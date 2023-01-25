@@ -51,9 +51,9 @@ class TestSommeVersLettres(unittest.TestCase):
     def test_type_error_conversion(self):
         with self.assertRaises(TypeError) as e:
             self.svl.conversion(456)
-            self.assertEqual(
-                e.exception, "Le nombre à convertir doit être de type float"
-            )
+        self.assertEqual(
+            str(e.exception), "Le nombre à convertir doit être de type float"
+        )
 
     def test_segmentation_petit_nombre(self):
         result: list = self.svl._segmentation("1")
@@ -89,13 +89,13 @@ class TestSommeVersLettres(unittest.TestCase):
         self.assertEqual(liste_nombres, ["123"])
 
     def test_value_error_preparation(self):
-        nombre = 12345678901234567890123456789012345678901234567890123456789012345678901234567890.0
+        nombre = 123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890.0
         with self.assertRaises(ValueError) as e:
             self.svl._preparation(nombre)
-            self.assertEqual(
-                e.exception,
-                "Le nombre a convertir dépasse les capacité de traitement actuelle: 10^78 maximum",
-            )
+        self.assertEqual(
+            str(e.exception),
+            "Le nombre a convertir dépasse les capacité de traitement actuelle: 10^81 maximum",
+        )
 
     def test_recadrage_mantisse_base(self):
         result = self.svl._recadrage("82", is_mantisse=True)

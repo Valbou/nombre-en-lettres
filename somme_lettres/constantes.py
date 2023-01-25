@@ -46,6 +46,7 @@ _PUISSANCES = [
     "billiard",
     "trillion",
     "trilliard",
+    "quadrillion",
     "quadrilliard",
     "quintillion",
     "quintilliard",

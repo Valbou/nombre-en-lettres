@@ -10,5 +10,5 @@ Converti une somme fournie en une devise (ex: euros, dollars, francs) écrite en
 Permet entre autre, de compléter automatiquement un chèque avec la somme en chiffres et en toutes lettres.
 Le système colle au plus près de la notation française.
 
-Gère des sommes de 1 centime à 1x10⁷⁸...
+Gère des sommes de 1 centime à 1x10⁸¹...
 Ce qui devrait couvrir la plupart des usages courants :)
